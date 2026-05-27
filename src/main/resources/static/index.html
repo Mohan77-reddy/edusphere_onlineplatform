@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduSphere | Advanced Interactive Learning Platform</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Notification Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Main App Container -->
+    <div class="app-container">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="app-sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <span class="brand-text">EduSphere</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-view="dashboard">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-view="catalog">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>Browse Courses</span>
+                </a>
+                <a href="#" class="nav-item" data-view="my-courses">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>My Courses</span>
+                </a>
+                <a href="#" class="nav-item" id="nav-admin" data-view="admin">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span>Admin Panel</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-profile" id="sidebar-profile-btn">
+                <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Felix" alt="User Avatar" class="profile-avatar" id="sidebar-avatar">
+                <div class="profile-info">
+                    <span class="profile-name" id="sidebar-username">Guest User</span>
+                    <span class="profile-role" id="sidebar-userrole">Student</span>
+                </div>
+                <i class="fa-solid fa-right-to-bracket profile-logout" id="auth-action-icon"></i>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="app-content">
+            
+            <!-- Header Bar -->
+            <header class="app-header">
+                <div class="header-search">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="search-input" placeholder="Search for courses, skills, or levels...">
+                </div>
+                
+                <div class="header-actions">
+                    <div class="header-stat" title="Total XP Earned">
+                        <i class="fa-solid fa-bolt"></i>
+                        <span id="user-xp">150 XP</span>
+                    </div>
+                    <button class="btn btn-secondary" id="auth-btn">
+                        <i class="fa-solid fa-user"></i> <span id="auth-btn-text">Sign In</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- VIEW: Dashboard -->
+            <section id="view-dashboard" class="content-view active">
+                <div class="welcome-banner">
+                    <div class="banner-content">
+                        <h1 class="banner-title">Welcome back, <span id="banner-username">Explorer</span>!</h1>
+                        <p class="banner-subtitle">Ready to advance your tech stack? Continue learning your enrolled courses or explore brand new topics below.</p>
+                        <button class="btn btn-primary btn-banner" id="banner-action-btn">Explore Catalog</button>
+                    </div>
+                    <div class="banner-graphic">
+                        <i class="fa-solid fa-rocket float-animation"></i>
+                    </div>
+                </div>
+
+                <!-- Dashboard Statistics -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon bg-blue"><i class="fa-solid fa-book"></i></div>
+                        <div class="stat-details">
+                            <span class="stat-value" id="stat-enrolled">0</span>
+                            <span class="stat-label">Enrolled Courses</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-green"><i class="fa-solid fa-circle-check"></i></div>
+                        <div class="stat-details">
+                            <span class="stat-value" id="stat-completed">0</span>
+                            <span class="stat-label">Completed Courses</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-orange"><i class="fa-solid fa-chart-line"></i></div>
+                        <div class="stat-details">
+                            <span class="stat-value" id="stat-progress">0%</span>
+                            <span class="stat-label">Average Progress</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon bg-purple"><i class="fa-solid fa-award"></i></div>
+                        <div class="stat-details">
+                            <span class="stat-value" id="stat-certificates">0</span>
+                            <span class="stat-label">Certificates Earned</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dashboard Enrolled List -->
+                <div class="section-container">
+                    <h2 class="section-title">In Progress</h2>
+                    <div class="courses-grid" id="dashboard-in-progress">
+                        <!-- Filled by JS -->
+                        <div class="no-courses-placeholder">
+                            <i class="fa-solid fa-folder-open"></i>
+                            <p>You haven't enrolled in any courses yet.</p>
+                            <button class="btn btn-secondary btn-sm" onclick="navigateToView('catalog')">Find a Course</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: Catalog -->
+            <section id="view-catalog" class="content-view">
+                <div class="catalog-header">
+                    <div>
+                        <h1 class="view-title">Course Catalog</h1>
+                        <p class="view-subtitle">High-quality professional pathways curated by technical experts.</p>
+                    </div>
+                    <!-- Categories -->
+                    <div class="category-filters" id="category-filters">
+                        <button class="filter-pill active" data-category="All">All Topics</button>
+                        <button class="filter-pill" data-category="Backend Development">Backend</button>
+                        <button class="filter-pill" data-category="Design & Frontend">Frontend & Design</button>
+                        <button class="filter-pill" data-category="Data Science">Data Science</button>
+                    </div>
+                </div>
+
+                <div class="courses-grid" id="catalog-list">
+                    <!-- Loaded dynamically via Java API -->
+                </div>
+            </section>
+
+            <!-- VIEW: My Courses -->
+            <section id="view-my-courses" class="content-view">
+                <h1 class="view-title">My Learning Dashboard</h1>
+                <p class="view-subtitle">Track, resume, and review your enrolled educational achievements.</p>
+                
+                <div class="my-courses-container">
+                    <div class="my-courses-header-tabs">
+                        <button class="tab-pill active" data-tab="all-enrolled">All Enrolled</button>
+                        <button class="tab-pill" data-tab="completed">Completed</button>
+                    </div>
+                    
+                    <div class="courses-grid" id="my-courses-list">
+                        <!-- Filled dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: Course Detail -->
+            <section id="view-detail" class="content-view">
+                <button class="btn-back" id="detail-back-btn">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Catalog
+                </button>
+
+                <div class="course-hero" id="detail-hero">
+                    <!-- Dynamic details -->
+                </div>
+
+                <div class="detail-columns">
+                    <!-- Left: Syllabus -->
+                    <div class="detail-syllabus-card">
+                        <h3 class="card-heading">Curriculum Syllabus</h3>
+                        <div class="lessons-list" id="detail-lessons-list">
+                            <!-- Filled dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Right: Info cards -->
+                    <div class="detail-info-sidebar">
+                        <div class="sidebar-info-card">
+                            <h4 class="card-heading">Course Features</h4>
+                            <ul class="info-list">
+                                <li>
+                                    <i class="fa-regular fa-clock"></i>
+                                    <div>
+                                        <span class="label">Duration</span>
+                                        <span class="val" id="detail-duration">-</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i class="fa-solid fa-chart-simple"></i>
+                                    <div>
+                                        <span class="label">Skill Level</span>
+                                        <span class="val" id="detail-level">-</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i class="fa-solid fa-layer-group"></i>
+                                    <div>
+                                        <span class="label">Category</span>
+                                        <span class="val" id="detail-category">-</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <i class="fa-solid fa-book-open-reader"></i>
+                                    <div>
+                                        <span class="label">Total Lessons</span>
+                                        <span class="val" id="detail-lessons-count">0</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Certificate Badge Preview -->
+                        <div class="sidebar-info-card cert-preview-card hidden" id="detail-cert-card">
+                            <div class="cert-preview-icon">
+                                <i class="fa-solid fa-medal"></i>
+                            </div>
+                            <h4>Certificate Earned</h4>
+                            <p>Excellent job! You've successfully finished all lessons in this syllabus.</p>
+                            <button class="btn btn-primary btn-block" id="detail-cert-btn">
+                                <i class="fa-solid fa-award"></i> View Certificate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: Lesson Player -->
+            <section id="view-player" class="content-view">
+                <div class="player-header">
+                    <button class="btn-back" id="player-back-btn">
+                        <i class="fa-solid fa-chevron-left"></i> Course Syllabus
+                    </button>
+                    <div class="player-title-block">
+                        <h2 class="player-course-title" id="player-course-title">Course Title</h2>
+                        <span class="player-lesson-title" id="player-lesson-title">Lesson Title</span>
+                    </div>
+                </div>
+
+                <div class="player-grid">
+                    <!-- Left: Video & Rich Reading Content -->
+                    <div class="player-main">
+                        <!-- Dynamic Media -->
+                        <div class="video-container">
+                            <video id="lesson-video" controls poster="https://api.dicebear.com/7.x/shapes/svg?seed=video">
+                                <source id="video-source" src="" type="video/mp4">
+                                Your browser does not support HTML5 video streaming.
+                            </video>
+                        </div>
+                        
+                        <div class="lesson-text-card">
+                            <div class="tabs-header">
+                                <button class="tab-pill active">Lecture Transcripts</button>
+                                <button class="tab-pill">Key Takeaways</button>
+                            </div>
+                            <div class="lesson-body-content" id="lesson-text-content">
+                                <!-- Loaded dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Navigation Panel / Checkboxes -->
+                    <div class="player-sidebar">
+                        <div class="progress-meter">
+                            <div class="progress-meter-info">
+                                <span>Course Completion</span>
+                                <span id="player-progress-pct">0%</span>
+                            </div>
+                            <div class="progress-meter-bar-bg">
+                                <div class="progress-meter-bar-fill" id="player-progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="player-syllabus-list">
+                            <h3 class="card-heading">Curriculum Navigation</h3>
+                            <div class="player-lessons-container" id="player-lessons-list">
+                                <!-- Dynamic check list -->
+                            </div>
+                        </div>
+
+                        <!-- Completion action button -->
+                        <div class="player-actions">
+                            <button class="btn btn-success btn-block" id="btn-toggle-lesson-status">
+                                <i class="fa-solid fa-square-check"></i> <span id="btn-toggle-text">Mark Completed</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: Admin Panel -->
+            <section id="view-admin" class="content-view">
+                <div class="admin-header">
+                    <div>
+                        <h1 class="view-title">Admin Management Suite</h1>
+                        <p class="view-subtitle">Add, edit, or delete platform courses in real-time. Modifications update the REST API dynamically.</p>
+                    </div>
+                    <button class="btn btn-primary" id="admin-add-btn">
+                        <i class="fa-solid fa-plus"></i> Create New Course
+                    </button>
+                </div>
+
+                <div class="admin-tabs-container">
+                    <div class="admin-tabs">
+                        <button class="tab-pill active" id="tab-admin-list">Catalog Management</button>
+                        <button class="tab-pill" id="tab-admin-form" style="display:none;">Course Form</button>
+                    </div>
+
+                    <!-- Admin: Manage Courses List -->
+                    <div id="admin-courses-section">
+                        <div class="admin-table-card">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Course Details</th>
+                                        <th>Category</th>
+                                        <th>Duration</th>
+                                        <th>Level</th>
+                                        <th>Lessons</th>
+                                        <th class="align-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-courses-table">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Admin: Edit/Add Form -->
+                    <div id="admin-form-section" class="hidden">
+                        <div class="admin-form-card">
+                            <h3 class="form-title" id="form-action-title">Create Dynamic Pathway</h3>
+                            
+                            <form id="course-form" onsubmit="handleFormSubmit(event)">
+                                <input type="hidden" id="form-course-id">
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="form-title">Course Title</label>
+                                        <input type="text" id="form-title" required placeholder="e.g. Mastering Advanced Docker Pipelines">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="form-category">Category</label>
+                                        <select id="form-category" required>
+                                            <option value="Backend Development">Backend Development</option>
+                                            <option value="Design & Frontend">Design & Frontend</option>
+                                            <option value="Data Science">Data Science</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="form-duration">Duration</label>
+                                        <input type="text" id="form-duration" required placeholder="e.g. 15 Hours">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="form-level">Target Level</label>
+                                        <select id="form-level" required>
+                                            <option value="Beginner">Beginner</option>
+                                            <option value="Intermediate">Intermediate</option>
+                                            <option value="Advanced">Advanced</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="form-description">Description</label>
+                                    <textarea id="form-description" required rows="3" placeholder="Briefly summarize what this pathway covers and what key outcomes the students will achieve."></textarea>
+                                </div>
+
+                                <div class="lessons-builder-section">
+                                    <div class="lessons-builder-header">
+                                        <h4>Curriculum Syllabus Buildout</h4>
+                                        <button type="button" class="btn btn-secondary btn-sm" id="btn-add-lesson-input">
+                                            <i class="fa-solid fa-plus"></i> Add Lesson Segment
+                                        </button>
+                                    </div>
+                                    <div class="lessons-inputs-container" id="lessons-inputs-container">
+                                        <!-- Lesson inputs stack -->
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="button" class="btn btn-secondary" id="btn-cancel-admin-form">Cancel</button>
+                                    <button type="submit" class="btn btn-primary" id="btn-save-course">Save Dynamic Pathway</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL: Sign In / Signup -->
+    <div class="modal-overlay" id="modal-auth">
+        <div class="modal-card auth-card">
+            <button class="modal-close" id="auth-modal-close"><i class="fa-solid fa-xmark"></i></button>
+            <div class="auth-tabs">
+                <button class="auth-tabactive" id="tab-login">Login</button>
+                <button class="auth-tab" id="tab-signup">Register</button>
+            </div>
+            
+            <form id="auth-form" class="auth-form-body">
+                <h3 class="auth-title" id="auth-modal-title">Sign in to EduSphere</h3>
+                <p class="auth-desc">Access mock progress tracking, claim dynamic certificates, and synchronize catalog preferences.</p>
+                
+                <div class="form-group" id="group-fullname" style="display:none;">
+                    <label for="auth-fullname">Full Name</label>
+                    <input type="text" id="auth-fullname" placeholder="John Doe">
+                </div>
+                
+                <div class="form-group">
+                    <label for="auth-username">Username</label>
+                    <input type="text" id="auth-username" required placeholder="johndoe">
+                </div>
+                
+                <div class="form-group">
+                    <label for="auth-password">Password</label>
+                    <input type="password" id="auth-password" required placeholder="••••••••">
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block btn-auth" id="btn-auth-submit">Sign In</button>
+                <p class="auth-switch-text" id="auth-switch-prompt">Don't have an account? <span id="btn-switch-auth">Sign Up</span></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Certificate of Completion -->
+    <div class="modal-overlay" id="modal-certificate">
+        <div class="modal-card certificate-card">
+            <button class="modal-close no-print" id="cert-modal-close"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="certificate-inner" id="certificate-print-area">
+                <!-- Golden Double Border -->
+                <div class="cert-border-outer">
+                    <div class="cert-border-inner">
+                        
+                        <!-- Ribbon/Cap Header -->
+                        <div class="cert-header">
+                            <i class="fa-solid fa-award cert-gold-seal-big"></i>
+                            <span class="cert-institution">EDUSPHERE DIGITAL ACADEMY</span>
+                        </div>
+                        
+                        <h1 class="cert-title">Certificate of Completion</h1>
+                        <p class="cert-presented">This document is proudly presented to</p>
+                        
+                        <h2 class="cert-recipient" id="cert-user-name">Jane Doe</h2>
+                        
+                        <div class="cert-divider"></div>
+                        
+                        <p class="cert-body">
+                            for successfully and diligently completing the intensive professional study program
+                        </p>
+                        
+                        <h3 class="cert-course" id="cert-course-title">Mastering Full-Stack Java & Spring Boot</h3>
+                        
+                        <p class="cert-meta">
+                            demonstrating mastery over custom architectures, database integrations, responsive layouts, and interactive logic.
+                        </p>
+                        
+                        <!-- Footer Signature & Stamp -->
+                        <div class="cert-footer">
+                            <div class="cert-sign">
+                                <span class="signature-line font-script">EduSphere Core API</span>
+                                <span class="sign-label">PLATFORM AUTOMATION SYSTEM</span>
+                            </div>
+                            
+                            <div class="cert-seal">
+                                <div class="gold-stamp">
+                                    <i class="fa-solid fa-graduation-cap stamp-icon"></i>
+                                    <div class="stamp-circular-text">★ APPROVED ★ SECURED</div>
+                                </div>
+                            </div>
+                            
+                            <div class="cert-sign">
+                                <span class="signature-line" id="cert-date">May 27, 2026</span>
+                                <span class="sign-label">DATE OF COMPLETION</span>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="cert-modal-actions no-print">
+                <button class="btn btn-secondary" onclick="window.print()">
+                    <i class="fa-solid fa-print"></i> Print / Save as PDF
+                </button>
+                <button class="btn btn-primary" id="btn-close-cert-modal">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script File -->
+    <script src="app.js"></script>
+</body>
+</html>
