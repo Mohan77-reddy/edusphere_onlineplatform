@@ -1,1 +1,1 @@
-live link :-https://github.com/Mohan77-reddy/edusphere_onlineplatform.git
+live link :-https://mohan77-reddy.github.io/edusphere_onlineplatform/
